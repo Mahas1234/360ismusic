@@ -1,0 +1,352 @@
+[
+  {
+    "original": "https://amazon.in/dp/B00HVLUR86",
+    "checkTarget": "https://www.amazon.in/dp/B00HVLUR86",
+    "asin": "B00HVLUR86",
+    "status": 200,
+    "ok": true,
+    "finalUrl": "https://www.amazon.in/dp/B00HVLUR86",
+    "suggested": "https://www.amazon.in/dp/B00HVLUR86",
+    "error": null
+  },
+  {
+    "original": "B00IBIVBZW",
+    "checkTarget": "https://www.amazon.in/s?k=B00IBIVBZW",
+    "asin": null,
+    "status": 503,
+    "ok": false,
+    "finalUrl": "https://www.amazon.in/s?k=B00IBIVBZW",
+    "suggested": null,
+    "error": null
+  },
+  {
+    "original": "https://amazon.in/dp/B077S2QZPX",
+    "checkTarget": "https://www.amazon.in/dp/B077S2QZPX",
+    "asin": "B077S2QZPX",
+    "status": 200,
+    "ok": true,
+    "finalUrl": "https://www.amazon.in/dp/B077S2QZPX",
+    "suggested": "https://www.amazon.in/dp/B077S2QZPX",
+    "error": null
+  },
+  {
+    "original": "https://amazon.in/dp/B0863TXGM3",
+    "checkTarget": "https://www.amazon.in/dp/B0863TXGM3",
+    "asin": "B0863TXGM3",
+    "status": 200,
+    "ok": true,
+    "finalUrl": "https://www.amazon.in/dp/B0863TXGM3",
+    "suggested": "https://www.amazon.in/dp/B0863TXGM3",
+    "error": null
+  },
+  {
+    "original": "https://amazon.in/dp/B002VA464S",
+    "checkTarget": "https://www.amazon.in/dp/B002VA464S",
+    "asin": "B002VA464S",
+    "status": 200,
+    "ok": true,
+    "finalUrl": "https://www.amazon.in/dp/B002VA464S",
+    "suggested": "https://www.amazon.in/dp/B002VA464S",
+    "error": null
+  },
+  {
+    "original": "https://amazon.in/dp/B0002CZVXM",
+    "checkTarget": "https://www.amazon.in/dp/B0002CZVXM",
+    "asin": "B0002CZVXM",
+    "status": 200,
+    "ok": true,
+    "finalUrl": "https://www.amazon.in/dp/B0002CZVXM",
+    "suggested": "https://www.amazon.in/dp/B0002CZVXM",
+    "error": null
+  },
+  {
+    "original": "https://amazon.in/dp/B0002E4Z8M",
+    "checkTarget": "https://www.amazon.in/dp/B0002E4Z8M",
+    "asin": "B0002E4Z8M",
+    "status": 200,
+    "ok": true,
+    "finalUrl": "https://www.amazon.in/dp/B0002E4Z8M",
+    "suggested": "https://www.amazon.in/dp/B0002E4Z8M",
+    "error": null
+  },
+  {
+    "original": "https://amazon.in/dp/B0B8J4C8VH",
+    "checkTarget": "https://www.amazon.in/dp/B0B8J4C8VH",
+    "asin": "B0B8J4C8VH",
+    "status": 200,
+    "ok": true,
+    "finalUrl": "https://www.amazon.in/dp/B0B8J4C8VH",
+    "suggested": "https://www.amazon.in/dp/B0B8J4C8VH",
+    "error": null
+  },
+  {
+    "original": "https://amazon.in/dp/B08L9L8Z8L",
+    "checkTarget": "https://www.amazon.in/dp/B08L9L8Z8L",
+    "asin": "B08L9L8Z8L",
+    "status": 200,
+    "ok": true,
+    "finalUrl": "https://www.amazon.in/dp/B08L9L8Z8L",
+    "suggested": "https://www.amazon.in/dp/B08L9L8Z8L",
+    "error": null
+  },
+  {
+    "original": "https://amazon.in/dp/B07QR6Z1JB",
+    "checkTarget": "https://www.amazon.in/dp/B07QR6Z1JB",
+    "asin": "B07QR6Z1JB",
+    "status": 200,
+    "ok": true,
+    "finalUrl": "https://www.amazon.in/dp/B07QR6Z1JB",
+    "suggested": "https://www.amazon.in/dp/B07QR6Z1JB",
+    "error": null
+  },
+  {
+    "original": "https://amazon.in/dp/B0002E4Z8M",
+    "checkTarget": "https://www.amazon.in/dp/B0002E4Z8M",
+    "asin": "B0002E4Z8M",
+    "status": 200,
+    "ok": true,
+    "finalUrl": "https://www.amazon.in/dp/B0002E4Z8M",
+    "suggested": "https://www.amazon.in/dp/B0002E4Z8M",
+    "error": null
+  },
+  {
+    "original": "https://amazon.in/dp/B0002E4Z8M",
+    "checkTarget": "https://www.amazon.in/dp/B0002E4Z8M",
+    "asin": "B0002E4Z8M",
+    "status": 200,
+    "ok": true,
+    "finalUrl": "https://www.amazon.in/dp/B0002E4Z8M",
+    "suggested": "https://www.amazon.in/dp/B0002E4Z8M",
+    "error": null
+  },
+  {
+    "original": "https://amazon.in/dp/B08L9L8Z8L",
+    "checkTarget": "https://www.amazon.in/dp/B08L9L8Z8L",
+    "asin": "B08L9L8Z8L",
+    "status": 200,
+    "ok": true,
+    "finalUrl": "https://www.amazon.in/dp/B08L9L8Z8L",
+    "suggested": "https://www.amazon.in/dp/B08L9L8Z8L",
+    "error": null
+  },
+  {
+    "original": "B00IBIVBZW",
+    "checkTarget": "https://www.amazon.in/s?k=B00IBIVBZW",
+    "asin": null,
+    "status": 503,
+    "ok": false,
+    "finalUrl": "https://www.amazon.in/s?k=B00IBIVBZW",
+    "suggested": null,
+    "error": null
+  },
+  {
+    "original": "https://amazon.in/dp/B0002E4Z8M",
+    "checkTarget": "https://www.amazon.in/dp/B0002E4Z8M",
+    "asin": "B0002E4Z8M",
+    "status": 200,
+    "ok": true,
+    "finalUrl": "https://www.amazon.in/dp/B0002E4Z8M",
+    "suggested": "https://www.amazon.in/dp/B0002E4Z8M",
+    "error": null
+  },
+  {
+    "original": "https://amazon.in/dp/B077S2QZPX",
+    "checkTarget": "https://www.amazon.in/dp/B077S2QZPX",
+    "asin": "B077S2QZPX",
+    "status": 200,
+    "ok": true,
+    "finalUrl": "https://www.amazon.in/dp/B077S2QZPX",
+    "suggested": "https://www.amazon.in/dp/B077S2QZPX",
+    "error": null
+  },
+  {
+    "original": "https://amazon.in/dp/B07QR6Z1JB",
+    "checkTarget": "https://www.amazon.in/dp/B07QR6Z1JB",
+    "asin": "B07QR6Z1JB",
+    "status": 200,
+    "ok": true,
+    "finalUrl": "https://www.amazon.in/dp/B07QR6Z1JB",
+    "suggested": "https://www.amazon.in/dp/B07QR6Z1JB",
+    "error": null
+  },
+  {
+    "original": "https://amazon.in/dp/B08L9L8Z8L",
+    "checkTarget": "https://www.amazon.in/dp/B08L9L8Z8L",
+    "asin": "B08L9L8Z8L",
+    "status": 200,
+    "ok": true,
+    "finalUrl": "https://www.amazon.in/dp/B08L9L8Z8L",
+    "suggested": "https://www.amazon.in/dp/B08L9L8Z8L",
+    "error": null
+  },
+  {
+    "original": "https://amazon.in/dp/B0863TXGM3",
+    "checkTarget": "https://www.amazon.in/dp/B0863TXGM3",
+    "asin": "B0863TXGM3",
+    "status": 200,
+    "ok": true,
+    "finalUrl": "https://www.amazon.in/dp/B0863TXGM3",
+    "suggested": "https://www.amazon.in/dp/B0863TXGM3",
+    "error": null
+  },
+  {
+    "original": "https://amazon.in/dp/B0002E4Z8M",
+    "checkTarget": "https://www.amazon.in/dp/B0002E4Z8M",
+    "asin": "B0002E4Z8M",
+    "status": 200,
+    "ok": true,
+    "finalUrl": "https://www.amazon.in/dp/B0002E4Z8M",
+    "suggested": "https://www.amazon.in/dp/B0002E4Z8M",
+    "error": null
+  },
+  {
+    "original": "https://amazon.in/dp/B07QR6Z1JB",
+    "checkTarget": "https://www.amazon.in/dp/B07QR6Z1JB",
+    "asin": "B07QR6Z1JB",
+    "status": 200,
+    "ok": true,
+    "finalUrl": "https://www.amazon.in/dp/B07QR6Z1JB",
+    "suggested": "https://www.amazon.in/dp/B07QR6Z1JB",
+    "error": null
+  },
+  {
+    "original": "https://amazon.in/dp/B08L9L8Z8L",
+    "checkTarget": "https://www.amazon.in/dp/B08L9L8Z8L",
+    "asin": "B08L9L8Z8L",
+    "status": 200,
+    "ok": true,
+    "finalUrl": "https://www.amazon.in/dp/B08L9L8Z8L",
+    "suggested": "https://www.amazon.in/dp/B08L9L8Z8L",
+    "error": null
+  },
+  {
+    "original": "https://amazon.in/dp/B00HVLUR86",
+    "checkTarget": "https://www.amazon.in/dp/B00HVLUR86",
+    "asin": "B00HVLUR86",
+    "status": 200,
+    "ok": true,
+    "finalUrl": "https://www.amazon.in/dp/B00HVLUR86",
+    "suggested": "https://www.amazon.in/dp/B00HVLUR86",
+    "error": null
+  },
+  {
+    "original": "https://amazon.in/dp/B077S2QZPX",
+    "checkTarget": "https://www.amazon.in/dp/B077S2QZPX",
+    "asin": "B077S2QZPX",
+    "status": 200,
+    "ok": true,
+    "finalUrl": "https://www.amazon.in/dp/B077S2QZPX",
+    "suggested": "https://www.amazon.in/dp/B077S2QZPX",
+    "error": null
+  },
+  {
+    "original": "https://amazon.in/dp/B00IBIVBZW",
+    "checkTarget": "https://www.amazon.in/dp/B00IBIVBZW",
+    "asin": "B00IBIVBZW",
+    "status": 404,
+    "ok": false,
+    "finalUrl": "https://www.amazon.in/dp/B00IBIVBZW",
+    "suggested": "https://www.amazon.in/dp/B00IBIVBZW",
+    "error": null
+  },
+  {
+    "original": "B072BGHNJ1",
+    "checkTarget": "https://www.amazon.in/s?k=B072BGHNJ1",
+    "asin": null,
+    "status": 503,
+    "ok": false,
+    "finalUrl": "https://www.amazon.in/s?k=B072BGHNJ1",
+    "suggested": null,
+    "error": null
+  },
+  {
+    "original": "B07QDTZYSJ",
+    "checkTarget": "https://www.amazon.in/s?k=B07QDTZYSJ",
+    "asin": null,
+    "status": 503,
+    "ok": false,
+    "finalUrl": "https://www.amazon.in/s?k=B07QDTZYSJ",
+    "suggested": null,
+    "error": null
+  },
+  {
+    "original": "B07DCSN8MP",
+    "checkTarget": "https://www.amazon.in/s?k=B07DCSN8MP",
+    "asin": null,
+    "status": 503,
+    "ok": false,
+    "finalUrl": "https://www.amazon.in/s?k=B07DCSN8MP",
+    "suggested": null,
+    "error": null
+  },
+  {
+    "original": "B07GLW9VQN",
+    "checkTarget": "https://www.amazon.in/s?k=B07GLW9VQN",
+    "asin": null,
+    "status": 503,
+    "ok": false,
+    "finalUrl": "https://www.amazon.in/s?k=B07GLW9VQN",
+    "suggested": null,
+    "error": null
+  },
+  {
+    "original": "B07NFYYLF1",
+    "checkTarget": "https://www.amazon.in/s?k=B07NFYYLF1",
+    "asin": null,
+    "status": 503,
+    "ok": false,
+    "finalUrl": "https://www.amazon.in/s?k=B07NFYYLF1",
+    "suggested": null,
+    "error": null
+  },
+  {
+    "original": "B001ET7E8C",
+    "checkTarget": "https://www.amazon.in/s?k=B001ET7E8C",
+    "asin": null,
+    "status": 503,
+    "ok": false,
+    "finalUrl": "https://www.amazon.in/s?k=B001ET7E8C",
+    "suggested": null,
+    "error": null
+  },
+  {
+    "original": "B06XSRZV65",
+    "checkTarget": "https://www.amazon.in/s?k=B06XSRZV65",
+    "asin": null,
+    "status": 503,
+    "ok": false,
+    "finalUrl": "https://www.amazon.in/s?k=B06XSRZV65",
+    "suggested": null,
+    "error": null
+  },
+  {
+    "original": "B074FVJN7D",
+    "checkTarget": "https://www.amazon.in/s?k=B074FVJN7D",
+    "asin": null,
+    "status": 503,
+    "ok": false,
+    "finalUrl": "https://www.amazon.in/s?k=B074FVJN7D",
+    "suggested": null,
+    "error": null
+  },
+  {
+    "original": "B07Y3PTX42",
+    "checkTarget": "https://www.amazon.in/s?k=B07Y3PTX42",
+    "asin": null,
+    "status": 503,
+    "ok": false,
+    "finalUrl": "https://www.amazon.in/s?k=B07Y3PTX42",
+    "suggested": null,
+    "error": null
+  },
+  {
+    "original": "B07Y4SSRR1",
+    "checkTarget": "https://www.amazon.in/s?k=B07Y4SSRR1",
+    "asin": null,
+    "status": 503,
+    "ok": false,
+    "finalUrl": "https://www.amazon.in/s?k=B07Y4SSRR1",
+    "suggested": null,
+    "error": null
+  }
+]
