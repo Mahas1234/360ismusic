@@ -6,47 +6,39 @@ import { Star, ExternalLink, Tag } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Deal } from '@/types';
-import { buildAmazonUrl, formatPrice, getDiscountBadge } from '@/lib/utils/amazon';
+import { buildAmazonUrl, formatPrice, getDiscountBadge, usdToInr } from '@/lib/utils/amazon';
 
 interface DealCardProps {
   deal: Deal;
   index?: number;
 }
 
-// Declare gtag as a global variable
-declare const gtag: (...args: any[]) => void;
+// Declare gtag on the Window interface to avoid TS errors when Google Analytics is present
+declare global {
+  interface Window {
+    gtag?: (...args: any[]) => void;
+  }
+}
 
 export default function DealCard({ deal, index = 0 }: DealCardProps) {
   const handleAmazonClick = () => {
-    // Try to extract ASIN from amazonUrl or use title as search fallback
-    const extractASIN = (input?: string | null) => {
-      if (!input) return null;
-      const s = input.trim();
-      // Direct ASIN
-      if (/^[A-Z0-9]{10}$/i.test(s)) return s.toUpperCase();
-      // Extract from common Amazon URL patterns
-      const m = s.match(/(?:dp|gp\/product|product)\/(B[0-9A-Z]{9,12})/i) || s.match(/\/(B[0-9A-Z]{9,12})(?:[/?]|$)/i) || s.match(/\/([A-Z0-9]{10})(?:[/?]|$)/i);
-      if (m && m[1]) return m[1].toUpperCase();
-      return null;
-    };
+    // Build canonical Amazon search URL (uses product title as search query) and open directly.
+    const target = buildAmazonUrl(deal.amazonUrl, deal.title);
+    window.open(target, '_blank', 'noopener,noreferrer');
 
-    const asin = extractASIN(deal.amazonUrl);
-    const params = asin ? `asin=${encodeURIComponent(asin)}` : `q=${encodeURIComponent(deal.title)}`;
-    const redirectUrl = `/api/redirect/amazon?${params}`;
-
-    // Open the internal redirect endpoint which will 307 to Amazon with the affiliate tag
-    window.open(redirectUrl, '_blank', 'noopener,noreferrer');
-
-    // Track affiliate click
-    if (typeof gtag !== 'undefined') {
-      gtag('event', 'affiliate_click', {
+    // Track affiliate click using window.gtag if available
+    if (typeof window !== 'undefined' && window.gtag) {
+      window.gtag('event', 'affiliate_click', {
         product_id: deal.id,
         product_name: deal.title,
         value: deal.salePrice,
-        affiliate_redirect: redirectUrl
+        affiliate_redirect: target
       });
     }
   };
+
+  const discountPercent = deal.originalPrice && deal.salePrice ? Math.round(((deal.originalPrice - deal.salePrice) / deal.originalPrice) * 100) : 0;
+  const showLowPrice = discountPercent >= 20;
 
   return (
     <motion.div
@@ -65,11 +57,20 @@ export default function DealCard({ deal, index = 0 }: DealCardProps) {
         />
         
         {/* Discount Badge */}
-        {deal.discount > 0 && (
+        {discountPercent > 0 && (
           <div className="absolute top-3 left-3">
             <Badge className="bg-red-500 hover:bg-red-600 text-white font-bold px-2 py-1">
               <Tag className="w-3 h-3 mr-1" />
-              {getDiscountBadge(deal.discount)}
+              {getDiscountBadge(discountPercent)}
+            </Badge>
+          </div>
+        )}
+
+        {/* Low Price Badge */}
+        {showLowPrice && (
+          <div className="absolute top-12 left-3">
+            <Badge className="bg-green-600 text-white font-semibold px-2 py-1">
+              Low Price
             </Badge>
           </div>
         )}

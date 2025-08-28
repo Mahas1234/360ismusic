@@ -649,47 +649,72 @@ export const featuredDeals: Deal[] = [
   }
 ];
 
-// Function to generate additional deals for testing/scaling
+// Function to generate additional deals for testing/scaling (deterministic PRNG to avoid hydration mismatches)
 export function generateAdditionalDeals(count: number = 275): Deal[] {
   const additionalDeals: Deal[] = [];
   const categories = ['guitars', 'headphones', 'studio-gear', 'keyboards', 'audio-interfaces', 'accessories'];
   const brands = ['Fender', 'Gibson', 'Yamaha', 'Audio-Technica', 'Sony', 'Shure', 'Blue', 'Focusrite', 'PreSonus', 'Roland', 'Casio', 'Novation'];
-  
+
+  // Small deterministic PRNG (mulberry32) so outputs are stable across server and client
+  function mulberry32(seed: number) {
+    return function() {
+      let t = seed += 0x6D2B79F5;
+      t = Math.imul(t ^ (t >>> 15), t | 1);
+      t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+
+  const imageIds = [1407322, 3394650, 164938, 210764, 4226140, 1751731];
+
   for (let i = 26; i <= count + 25; i++) {
-    const category = categories[Math.floor(Math.random() * categories.length)];
-    const brand = brands[Math.floor(Math.random() * brands.length)];
-    const discount = Math.floor(Math.random() * 40) + 10; // 10-50% discount
-    const originalPrice = Math.floor(Math.random() * 500) + 50; // $50-$550
-    const salePrice = originalPrice * (1 - discount / 100);
-    const rating = (Math.random() * 1.5 + 3.5).toFixed(1); // 3.5-5.0 rating
-    const reviewCount = Math.floor(Math.random() * 5000) + 100;
-    
+    const rng = mulberry32(i);
+    const category = categories[Math.floor(rng() * categories.length)];
+    const brand = brands[Math.floor(rng() * brands.length)];
+    const discount = Math.floor(rng() * 40) + 10; // 10-50% discount
+    const originalPrice = Math.floor(rng() * 500) + 50; // $50-$550
+    const salePrice = parseFloat((originalPrice * (1 - discount / 100)).toFixed(2));
+    const rating = parseFloat((rng() * 1.5 + 3.5).toFixed(1)); // 3.5-5.0 rating
+    const reviewCount = Math.floor(rng() * 5000) + 100;
+
+    // deterministic image selection
+    const imgIndex = Math.floor(rng() * imageIds.length);
+    const image = `https://images.pexels.com/photos/${imageIds[imgIndex]}/pexels-photo-${imageIds[imgIndex]}.jpeg?auto=compress&cs=tinysrgb&w=800`;
+
+    // deterministic ASIN-like suffix
+    let asinSuffix = '';
+    for (let j = 0; j < 8; j++) {
+      const n = Math.floor(rng() * 36);
+      asinSuffix += n.toString(36);
+    }
+    const asin = `B0${asinSuffix.toUpperCase()}`;
+
     const deal: Deal = {
       id: i.toString(),
       title: `${brand} ${category.charAt(0).toUpperCase() + category.slice(1)} Model ${i}`,
       description: `High-quality ${category} from ${brand} with excellent performance and value.`,
-      image: `https://images.pexels.com/photos/${[1407322, 3394650, 164938, 210764, 4226140, 1751731][Math.floor(Math.random() * 6)]}/pexels-photo-${[1407322, 3394650, 164938, 210764, 4226140, 1751731][Math.floor(Math.random() * 6)]}.jpeg?auto=compress&cs=tinysrgb&w=800`,
+      image,
       originalPrice: parseFloat(originalPrice.toFixed(2)),
-      salePrice: parseFloat(salePrice.toFixed(2)),
+      salePrice,
       discount,
-      rating: parseFloat(rating),
+      rating,
       reviewCount,
       category,
-      amazonUrl: `https://www.amazon.in/dp/B0${Math.random().toString(36).substr(2, 8).toUpperCase()}?tag=mahas0f-21
-      `,
+      // store ASIN only so buildAmazonUrl can construct a title-based search; avoid hardcoded tags/URLs
+      amazonUrl: asin,
       features: [
         `Premium ${brand} quality`,
         'Professional performance',
         'Durable construction',
         'Great value for money'
       ],
-      isFeatured: Math.random() > 0.7,
-      isTrending: Math.random() > 0.8
+      isFeatured: rng() > 0.7,
+      isTrending: rng() > 0.8
     };
-    
+
     additionalDeals.push(deal);
   }
-  
+
   return additionalDeals;
 }
 
@@ -755,3 +780,50 @@ export const categories = baseCategories.map((c) => ({
   ...c,
   dealCount: allDeals.filter((d) => d.category === c.id).length
 }));
+
+// Sanitize Amazon URLs in data to avoid hardcoded affiliate tags and /dp/ URLs
+function sanitizeAmazonUrl(url?: string | null): string {
+  if (!url) return '';
+  try {
+    // If it's a full URL, try to parse and extract ASIN or remove tag
+    const parsed = new URL(url, 'https://www.amazon.in');
+    // Remove any tag query param
+    parsed.searchParams.delete('tag');
+
+    // Try to extract ASIN from path
+    const asinMatch = parsed.pathname.match(/\/dp\/([A-Z0-9]{10,20})/i);
+    if (asinMatch && asinMatch[1]) return asinMatch[1];
+
+    // If path contains readable title segments, return full path (without slashes) as a fallback
+    const cleanedPath = parsed.pathname.replace(/[^a-zA-Z0-9\s-]/g, ' ').replace(/[-_/]+/g, ' ').trim();
+    if (cleanedPath) return cleanedPath;
+
+    // Last resort: return origin + pathname without query
+    return `${parsed.hostname}${parsed.pathname}`;
+  } catch (e) {
+    // Not a valid URL — strip any tag query and return raw string
+    return String(url).replace(/\?tag=[^&]+/i, '');
+  }
+}
+
+// Apply sanitization to featuredDeals and importedDeals to remove hardcoded tags
+try {
+  if (Array.isArray(featuredDeals)) {
+    featuredDeals.forEach((d: any) => {
+      if (d && d.amazonUrl) d.amazonUrl = sanitizeAmazonUrl(d.amazonUrl);
+    });
+  }
+} catch (e) {
+  // ignore
+}
+
+try {
+  if (Array.isArray(importedDeals)) {
+    for (let i = 0; i < importedDeals.length; i++) {
+      const d: any = importedDeals[i];
+      if (d && d.amazonUrl) d.amazonUrl = sanitizeAmazonUrl(d.amazonUrl);
+    }
+  }
+} catch (e) {
+  // ignore
+}

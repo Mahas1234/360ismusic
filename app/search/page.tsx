@@ -1,23 +1,50 @@
+"use client";
+
+import { useEffect, useState } from 'react';
 import DealCard from '@/components/deals/deal-card';
-import { allDeals } from '@/lib/data/deals';
+import { useSearchParams } from 'next/navigation';
 
-interface SearchPageProps {
-  searchParams?: { q?: string };
-}
+export default function SearchPage() {
+  const searchParams = useSearchParams();
+  const query = (searchParams?.get('q') || '').toString().trim();
 
-export default function SearchPage({ searchParams }: SearchPageProps) {
-  const query = (searchParams?.q || '').toString().trim();
+  const [results, setResults] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
 
-  // Simple server-side search across title, description, category and features
-  const results = query
-    ? allDeals.filter((deal) => {
+  useEffect(() => {
+    let cancelled = false;
+    const run = async () => {
+      if (!query) {
+        setResults([]);
+        return;
+      }
+
+      setLoading(true);
+      // Dynamically import the large deals dataset on the client to avoid bundling it into the server static build
+      const mod = await import('@/lib/data/deals');
+      const allDeals = (mod as any).allDeals as any[];
+
+      const q = query.toLowerCase();
+      const filtered = allDeals.filter((deal) => {
         const hay = [deal.title, deal.description, deal.category, ...(deal.features || [])]
           .filter(Boolean)
           .join(' ')
           .toLowerCase();
-        return query.toLowerCase().split(/\s+/).every((term) => hay.includes(term));
-      })
-    : [];
+        return q.split(/\s+/).every((term) => hay.includes(term));
+      });
+
+      if (!cancelled) {
+        setResults(filtered);
+        setLoading(false);
+      }
+    };
+
+    run();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [query]);
 
   return (
     <div className="min-h-screen bg-gray-50 py-12">
@@ -38,10 +65,16 @@ export default function SearchPage({ searchParams }: SearchPageProps) {
           </p>
         </div>
 
-        {query && results.length === 0 && (
+        {query && results.length === 0 && !loading && (
           <div className="bg-white p-8 rounded-lg shadow-sm text-center">
             <h3 className="text-xl font-semibold text-gray-900 mb-2">No results found</h3>
             <p className="text-gray-600 mb-4">Try different keywords or check spelling.</p>
+          </div>
+        )}
+
+        {loading && (
+          <div className="bg-white p-8 rounded-lg shadow-sm text-center">
+            <p className="text-gray-600">Searching...</p>
           </div>
         )}
 

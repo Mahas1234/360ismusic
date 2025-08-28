@@ -1,61 +1,118 @@
-export function buildAmazonUrl(productUrl: string): string {
-  // Use NEXT_PUBLIC_AMAZON_AFFILIATE_ID when available, otherwise default to site tag
-  const affiliateId = process.env.NEXT_PUBLIC_AMAZON_AFFILIATE_ID || 'mahas0f-21';
+export function buildAmazonUrl(productUrl?: string, productTitle?: string): string {
+  // Prefer explicit India affiliate tag, then fallback to generic affiliate ID
+  const affiliateId = process.env.NEXT_PUBLIC_AMAZON_IN_TAG || process.env.NEXT_PUBLIC_AMAZON_AFFILIATE_ID || 'mahas0f-21';
 
   try {
-    // Normalize URL input
+    const titleQuery = productTitle?.trim();
+
+    // If no productUrl provided, use product title as search query when available
     if (!productUrl || productUrl.trim() === '') {
-      return `https://www.amazon.in/?tag=${affiliateId}`;
+      const base = new URL('https://www.amazon.in/s');
+      if (titleQuery) base.searchParams.set('k', titleQuery);
+      base.searchParams.set('tag', affiliateId);
+      return base.toString();
     }
 
-    // If productUrl is just an ASIN (e.g. 'B00HVLUR86' or 10-char code), build dp URL
-    const asinOnlyMatch = productUrl.trim().toUpperCase().match(/^(B[0-9A-Z]{9,12}|[A-Z0-9]{10})$/);
+    const input = productUrl.trim();
+
+    // If input is just an ASIN, prefer productTitle for search if available
+    const asinOnlyMatch = input.toUpperCase().match(/^(B[0-9A-Z]{9,12}|[A-Z0-9]{10})$/);
     if (asinOnlyMatch) {
-      const asin = asinOnlyMatch[0];
-      const url = new URL(`https://www.amazon.in/dp/${asin}`);
+      const query = titleQuery || asinOnlyMatch[0];
+      const url = new URL('https://www.amazon.in/s');
+      url.searchParams.set('k', query);
       url.searchParams.set('tag', affiliateId);
       return url.toString();
     }
 
-    // Try to extract ASIN from common Amazon URL patterns
-    const asinMatch = productUrl.match(/(?:dp|gp\/product|product)\/(B[0-9A-Z]{9,12})/i) || productUrl.match(/\/([A-Z0-9]{10})(?:[/?]|$)/i);
-    if (asinMatch && asinMatch[1]) {
-      const asin = asinMatch[1];
-      // Build canonical product URL using ASIN
-      const url = new URL(`https://www.amazon.in/dp/${asin}`);
-      url.searchParams.set('tag', affiliateId);
-      return url.toString();
+    // If it's an Amazon URL, try to extract a readable product name from the path
+    if (/amazon\.(com|in|co\.uk|de|ca|co|com\.au)/i.test(input)) {
+      try {
+        const parsed = new URL(input);
+        // If a search query 'k' already exists, prefer to keep it but replace tag
+        const existingK = parsed.searchParams.get('k');
+        if (existingK) {
+          const keep = existingK;
+          const out = new URL('https://www.amazon.in/s');
+          out.searchParams.set('k', keep);
+          out.searchParams.set('tag', affiliateId);
+          return out.toString();
+        }
+
+        // Try to derive a product name from the pathname before '/dp/' or from the path segments
+        let nameQuery = '';
+        const pathname = parsed.pathname || '';
+        const dpIndex = pathname.toLowerCase().indexOf('/dp/');
+        if (dpIndex > 0) {
+          // segment before /dp/ often contains the product title with hyphens
+          nameQuery = pathname.substring(1, dpIndex).replace(/[-_/]+/g, ' ');
+        } else {
+          const parts = pathname.split('/').filter(Boolean);
+          if (parts.length) {
+            // join parts except common prefixes like 'gp' or 'product'
+            nameQuery = parts.filter(p => !/^(gp|product)$/i.test(p)).join(' ');
+          }
+        }
+
+        // If we couldn't get a name from the path, use provided productTitle if available
+        if (!nameQuery && titleQuery) nameQuery = titleQuery;
+
+        // As a final fallback, if an ASIN exists in the URL use it as query
+        if (!nameQuery) {
+          const asinMatch = input.match(/(?:dp|gp\/product|product)\/(B[0-9A-Z]{9,12})/i) || input.match(/\/([A-Z0-9]{10})(?:[/?]|$)/i);
+          if (asinMatch && asinMatch[1]) nameQuery = asinMatch[1];
+        }
+
+        const out = new URL('https://www.amazon.in/s');
+        if (nameQuery) out.searchParams.set('k', nameQuery.trim());
+        out.searchParams.set('tag', affiliateId);
+        return out.toString();
+      } catch (e) {
+        // fall through to generic search
+      }
     }
 
-    // If full URL appears to be an Amazon URL but without ASIN, attempt to append tag
-    if (/amazon\.(com|in|co\.uk|de|ca|co|com\.au)/i.test(productUrl)) {
-      const url = new URL(productUrl);
-      // Replace existing tag if present
-      url.searchParams.set('tag', affiliateId);
-      return url.toString();
-    }
-
-    // Fallback: construct an Amazon search URL using the product title or URL path as query
-    const fallbackQuery = encodeURIComponent(productUrl.replace(/https?:\/\//, '').replace(/[^a-zA-Z0-9\s]/g, ' '));
-    const searchUrl = new URL(`https://www.amazon.in/s`);
-    searchUrl.searchParams.set('k', fallbackQuery);
+    // For non-Amazon inputs, prefer titleQuery if present, otherwise use the input as query
+    const fallbackQuery = titleQuery || input;
+    const searchUrl = new URL('https://www.amazon.in/s');
+    if (fallbackQuery) searchUrl.searchParams.set('k', fallbackQuery);
     searchUrl.searchParams.set('tag', affiliateId);
     return searchUrl.toString();
   } catch (error) {
     console.error('Error building Amazon URL:', error);
-    return productUrl;
+    return productUrl || `https://www.amazon.in/?tag=${affiliateId}`;
   }
 }
 
-export function formatPrice(price: number): string {
+// Pricing / display helpers
+const DEFAULT_USD_TO_INR = parseFloat(process.env.NEXT_PUBLIC_USD_TO_INR || '83');
+const DISPLAY_CURRENCY = (process.env.NEXT_PUBLIC_DISPLAY_CURRENCY || 'INR').toUpperCase();
+
+export function usdToInr(amountUsd: number, rate = DEFAULT_USD_TO_INR): number {
+  return Math.round((amountUsd || 0) * rate * 100) / 100; // keep two decimal precision
+}
+
+export function formatPrice(price: number | undefined | null): string {
+  if (price == null || isNaN(price as any)) return '';
+
+  if (DISPLAY_CURRENCY === 'INR') {
+    const inr = usdToInr(price as number);
+    return new Intl.NumberFormat('en-IN', {
+      style: 'currency',
+      currency: 'INR',
+      maximumFractionDigits: 0,
+    }).format(inr);
+  }
+
+  // default USD formatting
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
-  }).format(price);
+  }).format(price as number);
 }
 
 export function calculateSavings(original: number, sale: number): string {
-  const savings = original - sale;
+  const savings = (original || 0) - (sale || 0);
   return formatPrice(savings);
 }
 

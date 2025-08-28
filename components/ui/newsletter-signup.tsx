@@ -6,6 +6,13 @@ import { Mail, CheckCircle, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
+// Declare gtag on the Window interface to avoid TS errors when Google Analytics is present
+declare global {
+  interface Window {
+    gtag?: (...args: any[]) => void;
+  }
+}
+
 export default function NewsletterSignup() {
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
@@ -37,9 +44,9 @@ export default function NewsletterSignup() {
         setMessage('Thanks for subscribing! Check your email for confirmation.');
         setEmail('');
         
-        // Track conversion
-        if (typeof gtag !== 'undefined') {
-          gtag('event', 'newsletter_signup', {
+        // Track conversion using window.gtag if available (avoid undeclared global 'gtag')
+        if (typeof window !== 'undefined' && window.gtag) {
+          window.gtag('event', 'newsletter_signup', {
             method: 'email',
             email: email
           });

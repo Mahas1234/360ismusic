@@ -1,6 +1,10 @@
 /* @tailwind directives removed because Tailwind CSS is not processing this file */
 /* base styles, components, and utilities should be included via compiled CSS output */
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 @layer base {
   /* shadcn/ui color variables for light mode */
   :root {

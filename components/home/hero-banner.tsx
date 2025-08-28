@@ -4,8 +4,13 @@ import { motion } from 'framer-motion';
 import { ArrowRight, TrendingUp, Tag, Music } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import { formatPrice, getDiscountBadge } from '@/lib/utils/amazon';
 
 export default function HeroBanner() {
+  const salePrice = 99.99;
+  const originalPrice = 179.99;
+  const discountPercent = Math.round(((originalPrice - salePrice) / originalPrice) * 100);
+
   return (
     <section className="relative bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 overflow-hidden">
       {/* Background Pattern */}
@@ -34,15 +39,15 @@ export default function HeroBanner() {
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6">
               Today's Best{' '}
               <span className="bg-gradient-to-r from-yellow-400 to-orange-400 bg-clip-text text-transparent">
-                Amazon Deals
+                Amazon.in Deals
               </span>
               <br />
               in Music & Tech
             </h1>
 
             <p className="text-xl text-gray-300 mb-8 max-w-2xl">
-              Discover incredible savings on guitars, studio gear, headphones, and music accessories. 
-              Up to 70% off on premium brands - updated daily.
+              Discover incredible savings on guitars, studio gear, headphones, and music accessories.
+              Prices shown in INR (affiliate links to Amazon.in). Up to 70% off on premium brands - updated daily.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
@@ -52,7 +57,7 @@ export default function HeroBanner() {
                 className="bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-gray-900 font-bold px-8 py-4 rounded-full transform hover:scale-105 transition-all duration-200"
               >
                 <Link href="#featured-deals">
-                  Shop Today's Deals
+                  Shop Today's Deals on Amazon.in
                   <ArrowRight className="ml-2 w-5 h-5" />
                 </Link>
               </Button>
@@ -112,15 +117,15 @@ export default function HeroBanner() {
                     <span className="text-white font-semibold">Hot Deal</span>
                   </div>
                   <div className="bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full">
-                    -45% OFF
+                    {getDiscountBadge(discountPercent)}
                   </div>
                 </div>
                 <h3 className="text-white font-bold text-lg mb-2">
                   Audio-Technica ATH-M50x
                 </h3>
                 <div className="flex items-center space-x-3">
-                  <span className="text-2xl font-bold text-green-400">$99.99</span>
-                  <span className="text-gray-400 line-through">$179.99</span>
+                  <span className="text-2xl font-bold text-green-400">{formatPrice(salePrice)}</span>
+                  <span className="text-gray-400 line-through">{formatPrice(originalPrice)}</span>
                 </div>
               </motion.div>
 

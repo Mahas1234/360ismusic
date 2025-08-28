@@ -1,0 +1,51 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch: {}
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build & Export
+        env:
+          # Provide your India affiliate tag as a repository secret named NEXT_PUBLIC_AMAZON_IN_TAG
+          # Falls back to NEXT_PUBLIC_AMAZON_AFFILIATE_ID if not provided; set both if needed.
+          NEXT_PUBLIC_AMAZON_IN_TAG: ${{ secrets.NEXT_PUBLIC_AMAZON_IN_TAG }}
+          NEXT_PUBLIC_AMAZON_AFFILIATE_ID: ${{ secrets.NEXT_PUBLIC_AMAZON_AFFILIATE_ID }}
+        run: |
+          npm run build
+          npm run export
+
+      - name: Create CNAME (optional)
+        run: |
+          # If you provide a CUSTOM_DOMAIN secret, write it to the exported out/CNAME
+          if [ -n "${{ secrets.CUSTOM_DOMAIN }}" ]; then
+            echo "${{ secrets.CUSTOM_DOMAIN }}" > out/CNAME
+          fi
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./out
+          publish_branch: gh-pages
+          user_name: github-actions[bot]
+          user_email: github-actions[bot]@users.noreply.github.com
