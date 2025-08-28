@@ -6,8 +6,10 @@ import { motion } from 'framer-motion';
 import { Search, Menu, X, Music, ShoppingBag } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { useRouter } from 'next/navigation';
 
 export default function Header() {
+  const router = useRouter();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -23,8 +25,10 @@ export default function Header() {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      // Navigate to search results
-      window.location.href = `/search?q=${encodeURIComponent(searchQuery)}`;
+      // Navigate to search results using client router to avoid full reload
+      router.push(`/search?q=${encodeURIComponent(searchQuery)}`);
+      // Close mobile menu when navigating
+      setIsMenuOpen(false);
     }
   };
 

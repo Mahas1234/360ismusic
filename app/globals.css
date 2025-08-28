@@ -1,6 +1,5 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* @tailwind directives removed because Tailwind CSS is not processing this file */
+/* base styles, components, and utilities should be included via compiled CSS output */
 
 @layer base {
   /* shadcn/ui color variables for light mode */
@@ -62,9 +61,10 @@
 
   /* Base styles */
   * {
-    @apply border-border;
+    border-color: hsl(var(--border));
   }
   body {
-    @apply bg-background text-foreground;
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
   }
 }

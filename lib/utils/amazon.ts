@@ -1,14 +1,6 @@
 export function buildAmazonUrl(productUrl: string): string {
-  const affiliateId = process.env.NEXT_PUBLIC_AMAZON_AFFILIATE_ID;
-  if (!affiliateId) {
-    console.warn('Amazon affiliate ID not configured');
-    // Even if affiliate ID is missing, handle ASIN-only inputs by returning a canonical Amazon product URL
-    if (productUrl && /^[B0-9A-Z]{10,12}$/i.test(productUrl.trim())) {
-      const asin = productUrl.trim();
-      return `https://www.amazon.in/dp/${asin}`;
-    }
-    return productUrl;
-  }
+  // Use NEXT_PUBLIC_AMAZON_AFFILIATE_ID when available, otherwise default to site tag
+  const affiliateId = process.env.NEXT_PUBLIC_AMAZON_AFFILIATE_ID || 'mahas0f-21';
 
   try {
     // Normalize URL input
@@ -38,6 +30,7 @@ export function buildAmazonUrl(productUrl: string): string {
     // If full URL appears to be an Amazon URL but without ASIN, attempt to append tag
     if (/amazon\.(com|in|co\.uk|de|ca|co|com\.au)/i.test(productUrl)) {
       const url = new URL(productUrl);
+      // Replace existing tag if present
       url.searchParams.set('tag', affiliateId);
       return url.toString();
     }

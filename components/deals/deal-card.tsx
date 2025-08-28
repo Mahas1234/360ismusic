@@ -13,17 +13,37 @@ interface DealCardProps {
   index?: number;
 }
 
+// Declare gtag as a global variable
+declare const gtag: (...args: any[]) => void;
+
 export default function DealCard({ deal, index = 0 }: DealCardProps) {
   const handleAmazonClick = () => {
-    const affiliateUrl = buildAmazonUrl(deal.amazonUrl);
-    window.open(affiliateUrl, '_blank', 'noopener,noreferrer');
-    
+    // Try to extract ASIN from amazonUrl or use title as search fallback
+    const extractASIN = (input?: string | null) => {
+      if (!input) return null;
+      const s = input.trim();
+      // Direct ASIN
+      if (/^[A-Z0-9]{10}$/i.test(s)) return s.toUpperCase();
+      // Extract from common Amazon URL patterns
+      const m = s.match(/(?:dp|gp\/product|product)\/(B[0-9A-Z]{9,12})/i) || s.match(/\/(B[0-9A-Z]{9,12})(?:[/?]|$)/i) || s.match(/\/([A-Z0-9]{10})(?:[/?]|$)/i);
+      if (m && m[1]) return m[1].toUpperCase();
+      return null;
+    };
+
+    const asin = extractASIN(deal.amazonUrl);
+    const params = asin ? `asin=${encodeURIComponent(asin)}` : `q=${encodeURIComponent(deal.title)}`;
+    const redirectUrl = `/api/redirect/amazon?${params}`;
+
+    // Open the internal redirect endpoint which will 307 to Amazon with the affiliate tag
+    window.open(redirectUrl, '_blank', 'noopener,noreferrer');
+
     // Track affiliate click
     if (typeof gtag !== 'undefined') {
       gtag('event', 'affiliate_click', {
         product_id: deal.id,
         product_name: deal.title,
-        value: deal.salePrice
+        value: deal.salePrice,
+        affiliate_redirect: redirectUrl
       });
     }
   };

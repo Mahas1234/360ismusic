@@ -601,7 +601,8 @@ export const featuredDeals: Deal[] = [
     rating: 4.1,
     reviewCount: 18,
     category: 'accessories',
-    amazonUrl: 'https://www.amazon.in/dp/B06XSRZV65?tag=mahas0f-21',
+    // ASIN B06XSRZV65 returned 404 in validation; use a search URL with affiliate tag instead
+    amazonUrl: 'https://www.amazon.in/s?k=Black%20%26%20Tan%20Beer%20Soap%204-Pack&tag=mahas0f-21',
     features: ['Brand: Lather & Fizz Bath Boutique', 'Pack Size: 4']
   },
   {
